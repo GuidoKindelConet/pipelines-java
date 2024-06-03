@@ -1,15 +1,15 @@
-# Maven
-# Build your Java project and run tests with Apache Maven.
-# Add steps that analyze code, save build artifacts, deploy, and more:
-# https://docs.microsoft.com/azure/devops/pipelines/languages/java
-
 trigger:
-- main
+- none
 
 pool:
-  vmImage: 'windows-latest'
+  vmImage: 'ubuntu-latest'
 
 steps:
+- task: UsePythonVersion@0
+  inputs:
+    versionSpec: '3.x'
+    addToPath: true
+
 - task: Maven@3
   inputs:
     mavenPomFile: 'pom.xml'
@@ -17,10 +17,15 @@ steps:
     javaHomeOption: 'JDKVersion'
     jdkVersionOption: '1.8'
     jdkArchitectureOption: 'x64'
-    goals: 'clean install'
+    goals: 'clean test'
 
 - task: PublishTestResults@2
   inputs:
     testResultsFiles: '**/surefire-reports/TEST-*.xml'
     testRunTitle: 'Automated Test Results'
 
+- task: PublishPipelineArtifact@1
+  inputs:
+    targetPath: '$(Build.SourcesDirectory)/target'
+    artifact: 'drop'
+    publishLocation: 'Container'
