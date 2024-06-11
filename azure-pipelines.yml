@@ -25,6 +25,18 @@ steps:
 #    testRunTitle: 'Automated Test Results'
 
 - script: |
+    ls $(Agent.TempDirectory)/surefire-reports
+  displayName: 'List contents of surefire-reports directory'
+
+- script: |
+    echo "Agent.TempDirectory: $(Agent.TempDirectory)"
+    echo "Contents of Agent.TempDirectory:"
+    ls $(Agent.TempDirectory)
+    echo "Contents of surefire-reports directory:"
+    ls $(Agent.TempDirectory)/surefire-reports
+  displayName: 'Debug output'
+
+- script: |
     mkdir -p $(Build.ArtifactStagingDirectory)/test-reports
     cp -R $(Agent.TempDirectory)/surefire-reports $(Build.ArtifactStagingDirectory)/test-reports
   displayName: 'Copy Maven test reports to artifacts'
