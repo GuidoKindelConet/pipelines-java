@@ -24,6 +24,11 @@ steps:
 #    testResultsFiles: '**/surefire-reports/TEST-*.xml'
 #    testRunTitle: 'Automated Test Results'
 
+- script: |
+    mkdir -p $(Build.ArtifactStagingDirectory)/test-reports
+    cp -R $(Agent.TempDirectory)/surefire-reports $(Build.ArtifactStagingDirectory)/test-reports
+  displayName: 'Copy Maven test reports to artifacts'
+
 - task: PublishPipelineArtifact@1
   inputs:
     targetPath: '$(Build.SourcesDirectory)/target'
